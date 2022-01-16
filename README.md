@@ -1,9 +1,5 @@
 <h1>A Windows-10 Sound controller :)</h1>
 
-<b>If you want just try that, use standalone version, clone repo and double click on server.exe :)) <br></b>
-<h2>BUT</h2><br>
-<b>If you want install and run it from src code, follow this steps: <br></b>
-
 <h4>IMPORTANT NOTE -> for install pycaw package you have to install Visual studio C++ build tools </h4> 
 
 <h3>So follow this steps: <br><br>
