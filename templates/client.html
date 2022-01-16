@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <style>
+            h1 {
+                width: 100px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <script type="text/javascript">
+            function WebSocketTest(e) {
+                console.log(e.innerText);
+                if ("WebSocket" in window) {
+                    console.log("WebSocket is supported by your Browser!");
+                    host = window.location.host;
+                    port = 3400;
+                    let localhost_domain = "ws://{{IP}}:{{PORT}}/ws";
+                    // let localhost_domain = `ws://${host}:${port}/ws`;
+
+                    // Let us open a web socket
+                    var ws = new WebSocket(localhost_domain);
+
+                    ws.onopen = function () {
+                        // Web Socket is connected, send data using send()
+                        ws.send(e.innerText);
+                        console.log("Message is sent...");
+                    };
+
+                    ws.onmessage = function (evt) {
+                        var received_msg = evt.data;
+                        let h1_volume = document.getElementById("volume");
+                        h1_volume.textContent = `Volume: ${evt.data}`;
+                        console.log(`Message is received...: ${received_msg}`);
+                    };
+
+                    ws.onclose = function () {
+                        // websocket is closed.
+                        console.log("Connection is closed...");
+                    };
+                } else {
+                    // The browser doesn't support WebSocket
+                    console.log("WebSocket NOT supported by your Browser!");
+                }
+            }
+        </script>
+        <button onclick="WebSocketTest(this)">
+            <h1>-</h1>
+        </button>
+        <button onclick="WebSocketTest(this)">
+            <h1>+</h1>
+        </button>
+
+        <h1 id="volume">Volume: 40</h1>
+    </body>
+</html>
