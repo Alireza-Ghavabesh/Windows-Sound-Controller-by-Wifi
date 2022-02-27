@@ -8,8 +8,9 @@ interface = devices.Activate(
     IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
 volume = cast(interface, POINTER(IAudioEndpointVolume))
 volume.GetMute()
-masterVolume = volume.GetMasterVolumeLevel()
+
 vrange = volume.GetVolumeRange()
+
 # ========================== aiohttp server ==============
 import asyncio
 import logging
@@ -43,6 +44,7 @@ def get_ip():
 IP = get_ip()
 PORT = 3400
 
+
 # list of clients
 client_counter = 0
 
@@ -73,28 +75,22 @@ async def websocket_handler(request: Request) -> web.WebSocketResponse:
     ws = web.WebSocketResponse()
     await ws.prepare(request)
 
-    if ws not in CLIENTS:
-        CLIENTS.append(ws)
-    print(len(CLIENTS))
+    # if ws not in CLIENTS:
+    CLIENTS.append(ws)
+    # print(len(CLIENTS))
     # print(request.app['websockets'].values())
     async for msg in ws:
         if msg.type == aiohttp.WSMsgType.TEXT:
             if msg.data == 'close':
                 await ws.close()
             else:
-                if msg.data == "+":
-                    vlm -= 2
-                    fake_vlm += 2
-                    volume.SetMasterVolumeLevel(-int(vlm), None)
-                    print(f"volume: {fake_vlm}")
-                elif msg.data == "-":
-                    vlm += 2
-                    fake_vlm -= 2
-                    volume.SetMasterVolumeLevel(-int(vlm), None)
-                    print(f"volume: {fake_vlm}")
-                # await ws.send_str(str(fake_vlm))
+                v = int(80-int(msg.data))
+                print(msg.data)
+                volume.SetMasterVolumeLevel(-v, None)
+                masterVolume = volume.GetMasterVolumeLevel()
+                print(f"masterVolume: {masterVolume}")
                 for ws in CLIENTS:
-                    await ws.send_str(str(fake_vlm))
+                    await ws.send_str(msg.data)
         elif msg.type == aiohttp.WSMsgType.ERROR:
             print('ws connection closed with exception %s' %
                 ws.exception())

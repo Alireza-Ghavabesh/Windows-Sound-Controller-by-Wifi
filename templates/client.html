@@ -10,30 +10,39 @@
     </head>
 
     <body>
+        <input
+            type="range"
+            id="MasterVolume"
+            name="volume"
+            min="16"
+            max="80"
+            oninput="WebSocketTest(this)"
+            style="width: 100%; height: 200px"
+        />
+        <label for="volume">Volume</label>
         <script type="text/javascript">
             function WebSocketTest(e) {
-                console.log(e.innerText);
                 if ("WebSocket" in window) {
                     console.log("WebSocket is supported by your Browser!");
-                    host = window.location.host;
-                    port = 3400;
+                    let curent_domain = "ws://6e55-138-199-21-203.ngrok.io/ws";
                     let localhost_domain = "ws://{{IP}}:{{PORT}}/ws";
-                    // let localhost_domain = `ws://${host}:${port}/ws`;
 
                     // Let us open a web socket
                     var ws = new WebSocket(localhost_domain);
 
                     ws.onopen = function () {
                         // Web Socket is connected, send data using send()
-                        ws.send(e.innerText);
-                        console.log("Message is sent...");
+                        ws.send(e.value);
+                        console.log(`Message ${e.value} is sent...`);
                     };
 
                     ws.onmessage = function (evt) {
                         var received_msg = evt.data;
                         let h1_volume = document.getElementById("volume");
-                        h1_volume.textContent = `Volume: ${evt.data}`;
+                        h1_volume.textContent = `Volume: ${received_msg}`;
                         console.log(`Message is received...: ${received_msg}`);
+                        let mv = document.getElementById("MasterVolume");
+                        mv.value = parseInt(received_msg);
                     };
 
                     ws.onclose = function () {
@@ -46,12 +55,12 @@
                 }
             }
         </script>
-        <button onclick="WebSocketTest(this)">
+        <!-- <button onclick="WebSocketTest(this)">
             <h1>-</h1>
         </button>
         <button onclick="WebSocketTest(this)">
             <h1>+</h1>
-        </button>
+        </button> -->
 
         <h1 id="volume">Volume: 40</h1>
     </body>
