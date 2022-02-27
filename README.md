@@ -12,5 +12,5 @@ step 3) run: pip install -r requirements.txt
 
 </h3>
 <h3>
-for quick test download server.exe with templates folder and run server.exe.
+for quick test download server.exe with templates folder and run server.exe
 </h3>
