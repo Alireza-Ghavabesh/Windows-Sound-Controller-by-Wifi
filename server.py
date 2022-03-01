@@ -72,8 +72,8 @@ async def websocket_handler(request: Request) -> web.WebSocketResponse:
     ws = web.WebSocketResponse()
     await ws.prepare(request)
 
-    if ws not in CLIENTS:
-        CLIENTS.append(ws)
+    # if ws not in CLIENTS:
+    #     CLIENTS.append(ws)
     # print(len(CLIENTS))
     # print(request.app['websockets'].values())
     async for msg in ws:
