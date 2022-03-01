@@ -39,9 +39,9 @@
                         var received_msg = evt.data;
                         let h1_volume = document.getElementById("volume");
                         h1_volume.textContent = `Volume: ${received_msg}`;
-                        console.log(`Message is received...: ${received_msg}`);
-                        let mv = document.getElementById("MasterVolume");
-                        mv.value = parseInt(received_msg);
+                        // console.log(`Message is received...: ${received_msg}`);
+                        // let mv = document.getElementById("MasterVolume");
+                        // mv.value = parseInt(received_msg);
                     };
 
                     ws.onclose = function () {

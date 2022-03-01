@@ -86,8 +86,8 @@ async def websocket_handler(request: Request) -> web.WebSocketResponse:
                 volume.SetMasterVolumeLevel(-v, None)
                 masterVolume = volume.GetMasterVolumeLevel()
                 print(f"masterVolume: {masterVolume}")
-                for ws in CLIENTS:
-                    await ws.send_str(msg.data)
+                # for ws in CLIENTS:
+                #     await ws.send_str(msg.data)
         elif msg.type == aiohttp.WSMsgType.ERROR:
             print('ws connection closed with exception %s' %
                 ws.exception())
