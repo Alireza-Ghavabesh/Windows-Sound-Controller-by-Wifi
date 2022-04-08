@@ -6,6 +6,64 @@
             h1 {
                 width: 100px;
             }
+            .button {
+                width: 100%;
+                height: 500px;
+                /* copied */
+                padding: 15px 25px;
+                font-size: 24px;
+                text-align: center;
+                cursor: pointer;
+                outline: none;
+                color: #fff;
+                background-color: #04AA6D;
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 9px #999;
+                /* copied */
+                font-size: 200px;
+            }
+
+            .button:hover {background-color: #3e8e41}
+
+            .button:active {
+                margin: 20px;
+                background-color: #3e8e41;
+                box-shadow: 0 5px #666;
+                transform: translateY(4px);
+            }
+            div.flex-container{
+                display: flex;
+            }
+            input.range{
+                width: 100%;
+            }
+            button.button{
+                border-radius: 2px solid;
+            }
+            .pause{
+                width: 100%;
+                height: 300px;
+                /* copied */
+                padding: 15px 25px;
+                font-size: 24px;
+                text-align: center;
+                cursor: pointer;
+                outline: none;
+                color: #fff;
+                background-color: #082f99;
+                border: none;
+                border-radius: 15px;
+                box-shadow: 0 9px #999;
+                /* copied */
+                font-size: 200px;
+            }
+            .pause:active{
+                margin: 20px;
+                background-color: #3e8e41;
+                box-shadow: 0 5px #666;
+                transform: translateY(4px);
+            }
         </style>
     </head>
 
@@ -16,52 +74,79 @@
             name="volume"
             min="16"
             max="80"
-            oninput="WebSocketTest(this)"
+            oninput="send(this)"
+            class="range"
         />
+        <div class="flex-container">
+            <button class="button" value="<" onclick="send(this)"><</button>
+            <button class="button" value=">" onclick="send(this)">></button>
+        </div>
+        <button class="pause" value="space" onclick="send(this)">PAUSE</button>
         <style>
-            #MasterVolume {
+            /* #MasterVolume {
                 width: 100%;
                 height: 200px;
                 background-color: blueviolet;
                 color: brown;
+            } */
+
+            input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            border: 80px solid #0f41ca;
+            height: 36px;
+            width: 16px;
+            border-radius: 3px;
+            /* background: #ffffff; */
+            cursor: pointer;
+          
+            /* box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;  */
             }
+
+            /* All the same stuff for Firefox */
+           
+
+            /* All the same stuff for IE */
+            /* input[type=range]::-ms-thumb {
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            border: 1px solid #000000;
+            height: 36px;
+            width: 16px;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;} */
+               
         </style>
-        <script type="text/javascript">
-            function WebSocketTest(e) {
-                if ("WebSocket" in window) {
-                    console.log("WebSocket is supported by your Browser!");
-                    let curent_domain = "ws://6e55-138-199-21-203.ngrok.io/ws";
-                    let localhost_domain = "ws://{{IP}}:{{PORT}}/ws";
+        <script>
 
-                    // Let us open a web socket
-                    var ws = new WebSocket(localhost_domain);
+            var curent_domain = "ws://6e55-138-199-21-203.ngrok.io/ws";
+            var localhost_domain = "ws://{{IP}}:{{PORT}}/ws";
 
-                    ws.onopen = function () {
-                        // Web Socket is connected, send data using send()
-                        ws.send(e.value);
-                        console.log(`Message ${e.value} is sent...`);
-                    };
+            // Let us open a web socket
+            var ws = new WebSocket(localhost_domain);
 
-                    ws.onmessage = function (evt) {
-                        // var received_msg = evt.data;
-                        // let h1_volume = document.getElementById("volume");
-                        // h1_volume.textContent = `Volume: ${received_msg}`;
-                        // console.log(`Message is received...: ${received_msg}`);
-                        // let mv = document.getElementById("MasterVolume");
-                        // mv.value = parseInt(received_msg);
-                    };
-
-                    ws.onclose = function () {
-                        // websocket is closed.
-                        console.log("Connection is closed...");
-                    };
-                } else {
-                    // The browser doesn't support WebSocket
-                    console.log("WebSocket NOT supported by your Browser!");
-                }
+            function send(e) {
+                ws.send(e.value);
+                console.log(`${e.value} is sent...`);
             }
-        </script>
 
-        <!-- <h1 id="volume">Volume: 40</h1> -->
+            ws.onopen = function () {
+                // opened connection
+                console.log("connection opened successfully!")
+            };
+
+            ws.onmessage = function (evt) {
+                var received_msg = evt.data;
+                let h1_volume = document.getElementById("volume");
+                h1_volume.textContent = `Volume: ${received_msg}`;
+                console.log(`Message is received...: ${received_msg}`);
+                let mv = document.getElementById("MasterVolume");
+                mv.value = parseInt(received_msg);
+            };
+
+            ws.onclose = function () {
+                // websocket is closed.
+                console.log("Connection is closed...");
+            }; 
+        </script>
     </body>
 </html>

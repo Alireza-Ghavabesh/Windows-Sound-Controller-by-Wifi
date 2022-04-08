@@ -3,6 +3,8 @@ from ctypes import cast, POINTER
 from aiohttp.web_request import Request
 from comtypes import CLSCTX_ALL
 from pycaw.pycaw import AudioUtilities, IAudioEndpointVolume
+import keyboard
+
 devices = AudioUtilities.GetSpeakers()
 interface = devices.Activate(
     IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
@@ -80,6 +82,15 @@ async def websocket_handler(request: Request) -> web.WebSocketResponse:
         if msg.type == aiohttp.WSMsgType.TEXT:
             if msg.data == 'close':
                 await ws.close()
+            elif msg.data == '<':
+                keyboard.press_and_release('left')
+                print(msg.data)
+            elif msg.data == '>':
+                keyboard.press_and_release('right')
+                print(msg.data)
+            elif msg.data == 'space':
+                keyboard.press_and_release('space')
+                print(msg.data)
             else:
                 v = int(80-int(msg.data))
                 print(msg.data)
