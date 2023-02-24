@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <style>
+        h1 {
+            width: 100px;
+        }
+
+        .button {
+            width: 100%;
+            height: 500px;
+            /* copied */
+            padding: 15px 25px;
+            font-size: 24px;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+            color: #fff;
+            background-color: #04AA6D;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+            /* copied */
+            font-size: 200px;
+        }
+
+        .button:hover {
+            background-color: #3e8e41
+        }
+
+        .button:active {
+            margin: 20px;
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+
+        div.flex-container {
+            display: flex;
+        }
+
+        input.range {
+            width: 100%;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 12px;
+            cursor: pointer;
+
+            box-shadow: 1px 1px 1px #002200;
+            background: #205928;
+            border-radius: 1px;
+            border: 1px solid #18D501;
+        }
+
+        button.button {
+            border-radius: 2px solid;
+        }
+
+        .pause {
+            width: 100%;
+            height: 300px;
+            /* copied */
+            padding: 15px 25px;
+            font-size: 24px;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+            color: #fff;
+            background-color: #082f99;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 9px #999;
+            /* copied */
+            font-size: 200px;
+        }
+
+        .pause:active {
+            margin: 20px;
+            background-color: #3e8e41;
+            box-shadow: 0 5px #666;
+            transform: translateY(4px);
+        }
+    </style>
+</head>
+
+<body>
+    <input type="range" id="MasterVolume" name="volume" min="16" max="80" oninput="send(this)" class="range" />
+    <div class="flex-container">
+        <button class="button" value="prevtrack" onclick="send(this)">BACK</button>
+        <button class="button" value="nexttrack" onclick="send(this)">NEXT</button>
+    </div>
+    <button class="pause" value="playpause" onclick="send(this)">PAUSE</button>
+    <style>
+        /* #MasterVolume {
+                width: 100%;
+                height: 200px;
+                background-color: blueviolet;
+                color: brown;
+            } */
+
+
+        /* All the same stuff for Firefox */
+
+
+        /* All the same stuff for IE */
+        /* input[type=range]::-ms-thumb {
+            box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
+            border: 1px solid #000000;
+            height: 36px;
+            width: 16px;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;} */
+    </style>
+    <script>
+
+        var curent_domain = "ws://6e55-138-199-21-203.ngrok.io/ws";
+        var localhost_domain = "ws://{{IP}}:{{PORT}}/ws";
+
+        // Let us open a web socket
+        var ws = new WebSocket(localhost_domain);
+
+        function send(e) {
+            ws.send(e.value);
+            console.log(`${e.value} is sent...`);
+        }
+
+        ws.onopen = function () {
+            // opened connection
+            console.log("connection opened successfully!")
+        };
+
+        ws.onmessage = function (evt) {
+            var received_msg = evt.data;
+            let h1_volume = document.getElementById("volume");
+            h1_volume.textContent = `Volume: ${received_msg}`;
+            console.log(`Message is received...: ${received_msg}`);
+            let mv = document.getElementById("MasterVolume");
+            mv.value = parseInt(received_msg);
+        };
+
+        ws.onclose = function () {
+            // websocket is closed.
+            console.log("Connection is closed...");
+        }; 
+    </script>
+</body>
+
+</html>
